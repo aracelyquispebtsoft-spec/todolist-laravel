@@ -14,8 +14,6 @@ class CategoryController extends Controller
      */
     public function index(): View
     {
-        // withCount evita el problema N+1: una sola consulta trae el número de
-        // tareas de cada categoría, en lugar de una consulta por fila.
         $categories = Category::withCount('tasks')
             ->orderBy('name')
             ->get();
