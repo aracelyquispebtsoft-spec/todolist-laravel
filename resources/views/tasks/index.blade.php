@@ -98,10 +98,4 @@
             </tbody>
         </table>
     </div>
-
-    @if ($tasks->hasPages())
-        <div class="mt-4">
-            {{ $tasks->links() }}
-        </div>
-    @endif
 @endsection
