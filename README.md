@@ -65,12 +65,18 @@ php artisan key:generate
 # 3. Base de datos
 docker compose up -d          # levanta MySQL 8.4
 docker compose ps             # esperar a que aparezca (healthy)
-php artisan migrate
+php artisan migrate --seed    # esquema y datos de prueba
 
-# 4. Servidor de desarrollo
+# 4. Assets
+npm run build                 # compila los estilos una vez
+
+# 5. Servidor de desarrollo
 php artisan serve             # http://127.0.0.1:8000
-npm run dev                   # en otra terminal, para los assets
 ```
+
+El paso 4 no es opcional: sin él las vistas fallan con «Vite manifest not found».
+Durante el desarrollo puede sustituirse por `npm run dev`, que recompila al vuelo pero
+ocupa una terminal.
 
 ## Base de datos
 
@@ -89,8 +95,8 @@ Los datos viven en el volumen `mysql-data` y sobreviven al reinicio del contened
 
 ```bash
 php artisan migrate:fresh --seed   # recrear el esquema con datos de prueba
-php artisan test                   # ejecutar la suite de pruebas
 php artisan route:list             # listar las rutas registradas
+npm run build                      # recompilar los estilos tras tocar las vistas
 ```
 
 ## Convenciones
