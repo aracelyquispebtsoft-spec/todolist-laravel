@@ -13,8 +13,12 @@ class TaskSeeder extends Seeder
     /**
      * Run the database seeds.
      *
-     * Depende de CategorySeeder y TagSeeder: las categorías y etiquetas se buscan
-     * por nombre, así que deben existir antes de ejecutar este seeder.
+     * Depende de CategorySeeder y TagSeeder: las categorías se toman al azar entre
+     * las existentes y las etiquetas se buscan por nombre, así que ambas deben
+     * haberse generado antes.
+     *
+     * Se busca cada tarea por título para que el seeder pueda relanzarse. No se usa
+     * firstOrCreate() ni updateOrCreate() porque implicarían asignación masiva.
      */
     public function run(): void
     {
@@ -22,55 +26,53 @@ class TaskSeeder extends Seeder
             [
                 'title' => 'Preparar informe trimestral',
                 'description' => 'Reunir las métricas de los tres últimos meses y redactar el resumen.',
-                'category' => 'Trabajo',
+                'has_category' => true,
                 'is_completed' => false,
                 'tags' => ['urgente', 'importante'],
             ],
             [
                 'title' => 'Revisar propuesta del proveedor',
                 'description' => null,
-                'category' => 'Trabajo',
+                'has_category' => true,
                 'is_completed' => true,
                 'tags' => ['revisar'],
             ],
             [
                 'title' => 'Renovar el pasaporte',
                 'description' => 'Pedir cita previa y llevar la documentación.',
-                'category' => 'Personal',
+                'has_category' => true,
                 'is_completed' => false,
                 'tags' => ['pendiente'],
             ],
             [
                 'title' => 'Terminar el módulo de Laravel',
                 'description' => 'Repasar migraciones, modelos y relaciones.',
-                'category' => 'Estudio',
+                'has_category' => true,
                 'is_completed' => false,
                 'tags' => ['importante', 'pendiente'],
             ],
             [
                 'title' => 'Comprar material de oficina',
                 'description' => null,
-                'category' => 'Hogar',
+                'has_category' => true,
                 'is_completed' => true,
                 'tags' => [],
             ],
             [
                 'title' => 'Planificar la reunión de equipo',
                 'description' => 'Preparar el orden del día y reservar la sala.',
-                'category' => null,
+                'has_category' => false,
                 'is_completed' => false,
                 'tags' => ['reunión', 'urgente'],
             ],
         ];
 
         foreach ($tareas as $datos) {
-            // Se busca por título para que el seeder sea idempotente. No se usa
-            // firstOrCreate() ni updateOrCreate() porque implicarían asignación masiva.
             $task = Task::firstWhere('title', $datos['title']) ?? new Task;
             $task->title = $datos['title'];
             $task->description = $datos['description'];
-            $task->category_id = $datos['category']
-                ? Category::where('name', $datos['category'])->value('id')
+            $task->category_id = $datos['has_category']
+                ? Category::inRandomOrder()->value('id')
                 : null;
             $task->is_completed = $datos['is_completed'];
             $task->save();
