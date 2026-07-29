@@ -20,7 +20,7 @@ class TaskController extends Controller
         // haría una consulta por cada tarea para cada relación (problema N+1).
         $tasks = Task::with(['category', 'tags'])
             ->latest()
-            ->paginate(10);
+            ->get();
 
         return view('tasks.index', compact('tasks'));
     }

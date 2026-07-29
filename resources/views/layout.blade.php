@@ -23,18 +23,15 @@
                 'categories' => 'Categorías',
                 'tags' => 'Etiquetas',
             ] as $recurso => $etiqueta)
-                {{-- Cada enlace aparece cuando su CRUD entra en el proyecto --}}
-                @if (Route::has($recurso . '.index'))
-                    <a href="{{ route($recurso . '.index') }}"
-                       @class([
-                           'rounded-md px-3 py-1.5 text-sm font-medium transition',
-                           'bg-white text-slate-900' => request()->routeIs($recurso . '.*'),
-                           'text-slate-300 hover:bg-slate-800 hover:text-white' => ! request()->routeIs($recurso . '.*'),
-                       ])
-                       @if (request()->routeIs($recurso . '.*')) aria-current="page" @endif>
-                        {{ $etiqueta }}
-                    </a>
-                @endif
+                <a href="{{ route($recurso . '.index') }}"
+                   @class([
+                       'rounded-md px-3 py-1.5 text-sm font-medium transition',
+                       'bg-white text-slate-900' => request()->routeIs($recurso . '.*'),
+                       'text-slate-300 hover:bg-slate-800 hover:text-white' => ! request()->routeIs($recurso . '.*'),
+                   ])
+                   @if (request()->routeIs($recurso . '.*')) aria-current="page" @endif>
+                    {{ $etiqueta }}
+                </a>
             @endforeach
         </nav>
     </div>
