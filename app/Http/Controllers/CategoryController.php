@@ -18,7 +18,7 @@ class CategoryController extends Controller
         // tareas de cada categoría, en lugar de una consulta por fila.
         $categories = Category::withCount('tasks')
             ->orderBy('name')
-            ->paginate(10);
+            ->get();
 
         return view('categories.index', compact('categories'));
     }
