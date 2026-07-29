@@ -27,13 +27,21 @@
                 @forelse ($tasks as $task)
                     <tr>
                         <td class="px-4 py-3">
-                            <span @class([
-                                'inline-block rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap',
-                                'bg-emerald-100 text-emerald-800' => $task->is_completed,
-                                'bg-amber-100 text-amber-800' => ! $task->is_completed,
-                            ])>
-                                {{ $task->is_completed ? 'Completada' : 'Pendiente' }}
-                            </span>
+                            {{-- El propio estado es el botón: pulsarlo lo invierte --}}
+                            <form action="{{ route('tasks.toggle', $task) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+
+                                <button type="submit"
+                                        title="{{ $task->is_completed ? 'Marcar como pendiente' : 'Marcar como completada' }}"
+                                        @class([
+                                            'inline-block rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap transition',
+                                            'bg-emerald-100 text-emerald-800 hover:bg-emerald-200' => $task->is_completed,
+                                            'bg-amber-100 text-amber-800 hover:bg-amber-200' => ! $task->is_completed,
+                                        ])>
+                                    {{ $task->is_completed ? 'Completada' : 'Pendiente' }}
+                                </button>
+                            </form>
                         </td>
 
                         <td @class([

@@ -105,6 +105,25 @@ class TaskController extends Controller
     }
 
     /**
+     * Toggle the completion state of the task.
+     *
+     * No recibe datos del cliente —el estado se deduce invirtiendo el actual—,
+     * así que no necesita Form Request. La asignación sigue siendo individual.
+     */
+    public function toggle(Task $task): RedirectResponse
+    {
+        $task->is_completed = ! $task->is_completed;
+        $task->save();
+
+        $mensaje = $task->is_completed
+            ? 'Tarea marcada como completada.'
+            : 'Tarea marcada como pendiente.';
+
+        // back() devuelve al listado conservando la página y los filtros.
+        return back()->with('success', $mensaje);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * Sus filas en tag_task desaparecen por el cascadeOnDelete de la pivote.
